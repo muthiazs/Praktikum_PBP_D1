@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Tambah Data Produk</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            border: 1px solid #000;
+            padding: 20px;
+            width: 300px;
+        }
+        .form-container h2 {
+            text-align: center;
+        }
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-container input, .form-container select, .form-container textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .form-container input[type="checkbox"] {
+            width: auto;
+        }
+        .form-container input[type="radio"] {
+            width: auto;
+        }
+        .form-container input[type="submit"], .form-container input[type="reset"] {
+            width: 48%;
+            margin-right: 4%;
+        }
+    </style>
+    <script>
+        let captchaCode = "";
+
+        function generateCaptcha() {
+            captchaCode = "";
+            for (let i = 0; i < 5; i++) {
+                captchaCode += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+            }
+            document.getElementById("captchaText").value = captchaCode;
+        }
+
+        function validateForm() {
+            let namaProduk = document.forms["formProduk"]["namaProduk"].value;
+            let deskripsi = document.forms["formProduk"]["deskripsi"].value;
+            let kategori = document.forms["formProduk"]["kategori"].value;
+            let subKategori = document.forms["formProduk"]["subKategori"].value;
+            let hargaSatuan = document.forms["formProduk"]["hargaSatuan"].value;
+            let grosir = document.forms["formProduk"]["grosir"].value;
+            let hargaGrosir = document.forms["formProduk"]["hargaGrosir"].value;
+            let jasaKirim = document.querySelectorAll('input[name="jasaKirim"]:checked');
+            let captchaInput = document.forms["formProduk"]["captchaInput"].value;
+
+            // Validasi Nama Produk 
+            if (namaProduk == "" || namaProduk.length < 5 || namaProduk.length > 30) {
+                alert("Nama produk harus diisi dan terdiri dari 5-30 karakter.");
+                return false;
+            }
+
+            // Validasi Deskripsi
+            if (deskripsi == "" || deskripsi.length < 5 || deskripsi.length > 100) {
+                alert("Deskripsi harus diisi dan terdiri dari 5-100 karakter.");
+                return false;
+            }
+
+            // Validasi Kategori
+            if (kategori == "") {
+                alert("Kategori harus dipilih.");
+                return false;
+            }
+
+            // Validasi Sub Kategori
+            if (subKategori == "") {
+                alert("Sub Kategori harus dipilih.");
+                return false;
+            }
+
+            // Validasi Harga Satuan
+            //Nan adalah not a number digunakan untuk mengindikasikan bahwa sebuah nilai tidak dapat dianggap sebagai angka valid.
+            if (isNaN(hargaSatuan) || hargaSatuan == "") {
+                alert("Harga satuan harus diisi dengan nilai numerik.");
+                return false;
+            }
+
+            // Validasi Grosir dan Harga Grosir
+            if (grosir == "Ya" && (isNaN(hargaGrosir) || hargaGrosir == "")) {
+                alert("Harga grosir harus diisi.");
+                return false;
+            } else if (grosir == "Tidak") {
+                document.forms["formProduk"]["hargaGrosir"].value = ""; 
+            }
+
+            // Validasi Jasa Kirim
+            if (jasaKirim.length < 3) {
+                alert("Minimal pilih 3 jasa kirim.");
+                return false;
+            }
+
+            // Validasi Captcha
+            if (captchaInput != captchaCode) {
+                alert("Captcha yang dimasukkan salah.");
+                return false;
+            }
+
+            return true;
+        }
+
+        function updateSubKategori() {
+            let kategori = document.getElementById("kategori").value;
+            let subKategoriSelect = document.getElementById("subKategori");
+            subKategoriSelect.innerHTML = ""; 
+
+            if (kategori == "Baju") {
+                addOption(subKategoriSelect, "Baju Pria", "Baju Pria");
+                addOption(subKategoriSelect, "Baju Wanita", "Baju Wanita");
+                addOption(subKategoriSelect, "Baju Anak", "Baju Anak");
+            } else if (kategori == "Elektronik") {
+                addOption(subKategoriSelect, "Mesin Cuci", "Mesin Cuci");
+                addOption(subKategoriSelect, "Kulkas", "Kulkas");
+                addOption(subKategoriSelect, "AC", "AC");
+            } else if (kategori == "Alat Tulis") {
+                addOption(subKategoriSelect, "Kertas", "Kertas");
+                addOption(subKategoriSelect, "Map", "Map");
+                addOption(subKategoriSelect, "Pulpen", "Pulpen");
+            }
+        }
+
+        function addOption(selectElement, text, value) {
+            let option = document.createElement("option"); //nambahin opsi buat update subkategori
+            option.text = text;
+            option.value = value;
+            selectElement.add(option);
+        }
+
+        window.onload = function() {
+            generateCaptcha();
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Form Tambah Data Produk</h2>
+        <p>Muthia Zhafira Sahnah - 24060122130071</p>
+        <p>PBP Lab D1</p>
+        <form name="formProduk" onsubmit="return validateForm()" method="post">
+            <label>Nama Produk:</label>
+            <input type="text" name="namaProduk">
+
+            <label>Deskripsi:</label>
+            <textarea name="deskripsi"></textarea>
+
+            <label>Kategori:</label>
+            <select id="kategori" name="kategori" onchange="updateSubKategori()">
+                <option value="">--Pilih Kategori--</option>
+                <option value="Baju">Baju</option>
+                <option value="Elektronik">Elektronik</option>
+                <option value="Alat Tulis">Alat Tulis</option>
+            </select>
+
+            <label>Sub Kategori:</label>
+            <select id="subKategori" name="subKategori">
+                <option value="">--Pilih Sub Kategori--</option>
+            </select>
+
+            <label>Harga Satuan:</label>
+            <input type="text" name="hargaSatuan">
+
+            <label>Grosir:</label>
+            <input type="radio" name="grosir" value="Ya"> Ya
+            <input type="radio" name="grosir" value="Tidak"> Tidak
+
+            <label>Harga Grosir:</label>
+            <input type="text" name="hargaGrosir">
+
+            <label>Jasa Kirim:</label>
+            <input type="checkbox" name="jasaKirim" value="JNE"> JNE
+            <input type="checkbox" name="jasaKirim" value="JNT"> JNT
+            <input type="checkbox" name="jasaKirim" value="AnterAja"> AnterAja
+            <input type="checkbox" name="jasaKirim" value="SiCepat"> SiCepat
+            <input type="checkbox" name="jasaKirim" value="Wahana"> Wahana
+
+            <label>Captcha:</label>
+            <input type="text" id="captchaText" readonly style="width: 60px; display: inline;">
+            <input type="text" name="captchaInput">
+
+            <input type="submit" value="Submit">
+            <input type="reset" value="Reset">
+        </form>
+    </div>
+</body>
+</html>
