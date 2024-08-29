@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar JavaScript</title>
+
+    <script>
+        function myFunction01(){
+            document.getElementsByTagName("h1")[0].innerHTML ="Document Object Model";
+        }
+        function myFunction02(){
+            document.getElementById("logo").src ="logo2.jpg";
+        }
+        function myFunction03(){
+            document.getElementsByTagName("h1")[0].setAttribute("class","judul");
+            document.getElementById("logo").setAttribute("width",200);
+            document.getElementById("logo").setAttribute("height",200);        
+        }
+        function myFunction04(){
+            document.getElementsByClassName("judul")[0].style.color = "red";
+        }
+        function myFunction05(){
+            document.getElementsByTagName("h1")[0].style.color = "blue";
+        }
+    </script>
+</head>
+<body>
+    <h1>Hypertext Markup Language</h1>
+    <img id="logo" src="logo.jpg" alt="gambar">
+
+    <button id="btn01" type="button" onclick="myFunction01()">Ubah Inner HTML</button>
+    <button id="btn02" type="button" onclick="myFunction02()">Ubah logo</button>
+    <button id="btn03" type="button" onclick="myFunction03()">Set Atribut baru</button>
+    <button id="btn04" type="button" onclick="myFunction04()">Ganti Warna</button>
+    <button id="btn05" type="button" onclick="myFunction05()">Ganti Warna2</button>
+</body>
+</html>
