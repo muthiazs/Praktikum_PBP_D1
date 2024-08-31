@@ -3,65 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Tambah Data Produk</title>
+    <title>Document</title>
     <style>
-        body {
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #e0762f ;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
+            min-height:100vh ;
             margin: 0;
         }
-        .form-container {
-            border: 1px solid #000;
-            padding: 20px;
-            width: 300px;
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            overflow: hidden;
+            max-width: 100%;
         }
-        .form-container h2 {
-            text-align: center;
+        .header{
+            background-color: #f7f7f7 ;
+            padding: 40px;
+            border-radius: 5px;
         }
-        .form-container label {
-            display: block;
-            margin: 10px 0 5px;
+        .header h2{
+            margin: 10;
+            font-size: 25px;
+            font-family: inherit;
         }
-        .form-container input, .form-container select, .form-container textarea {
-            width: 100%;
-            padding: 5px;
-            margin-bottom: 10px;
+        .form{
+            padding: 5px 10px;
         }
-        .form-container input[type="checkbox"] {
-            width: auto;
+        .form-control{
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            position: relative;
         }
-        .form-container input[type="radio"] {
-            width: auto;
+        .form-control label{
+            display: inline-block;
+            margin-bottom: 5px;
+            font-size: 17px;
         }
-        .form-container input[type="submit"], .form-container input[type="reset"] {
-            width: 48%;
-            margin-right: 4%;
+
+        .form-control input{
+            border: 2px solid #f0f0f0;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            width: 150px;
+            height: 20px;
+        }
+
+        .form-control small{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            visibility: hidden;
+        }
+        .button input[type="submit"], 
+        .button input[type="reset"] {
+            width: 100%; 
+            background-color: #e0762f;
+            color: #f0f0f0; 
+            font-size: 20px;
+            padding: 10px; 
+            border: none; 
+            border-radius: 4px; 
+            margin: 10px;
+            cursor: pointer; 
+            font-family: Arial;
+            font-weight: bold;
         }
     </style>
     <script>
-        let captchaCode = "";
-
+        let captchaCode = ''; // Variable to store captcha code
         function generateCaptcha() {
-            captchaCode = "";
-            for (let i = 0; i < 5; i++) {
-                captchaCode += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+            const length = 5;
+            let captcha = '';
+            for (let i = 0; i < length; i++) {
+                const randomCharCode = Math.random() < 0.5
+                    ? Math.floor(Math.random() * (90 - 65 + 1)) + 65  // A-Z
+                    : Math.floor(Math.random() * (122 - 97 + 1)) + 97; // a-z
+                captcha += String.fromCharCode(randomCharCode);
             }
-            document.getElementById("captchaText").value = captchaCode;
+            captchaCode = captcha; // Store the captcha code
+            document.getElementById('captchaText').value = captcha;
         }
 
+        window.onload = generateCaptcha;
         function validateForm() {
-            let namaProduk = document.forms["formProduk"]["namaProduk"].value;
-            let deskripsi = document.forms["formProduk"]["deskripsi"].value;
-            let kategori = document.forms["formProduk"]["kategori"].value;
-            let subKategori = document.forms["formProduk"]["subKategori"].value;
-            let hargaSatuan = document.forms["formProduk"]["hargaSatuan"].value;
-            let grosir = document.forms["formProduk"]["grosir"].value;
-            let hargaGrosir = document.forms["formProduk"]["hargaGrosir"].value;
-            let jasaKirim = document.querySelectorAll('input[name="jasaKirim"]:checked');
-            let captchaInput = document.forms["formProduk"]["captchaInput"].value;
+            let namaProduk = document.getElementById("namaProduk").value;
+            let deskripsi = document.querySelector('textarea[name="deskripsi"]').value;
+            let kategori = document.getElementById("kategori").value;
+            let subKategori = document.getElementById("subKategori").value;
+            let hargaSatuan = document.getElementById("hargaSatuan").value;
+            let grosir = document.querySelector('input[name="Grosir"]:checked');
+            let hargaGrosir = document.getElementById("hargaGrosir").value;
+            let jasaKirim = document.querySelectorAll('input[name="JasaKirim"]:checked');
+            let captchaInput = document.querySelector('input[name="captchaInput"]').value;
 
             // Validasi Nama Produk 
             if (namaProduk == "" || namaProduk.length < 5 || namaProduk.length > 30) {
@@ -88,18 +132,17 @@
             }
 
             // Validasi Harga Satuan
-            //Nan adalah not a number digunakan untuk mengindikasikan bahwa sebuah nilai tidak dapat dianggap sebagai angka valid.
             if (isNaN(hargaSatuan) || hargaSatuan == "") {
                 alert("Harga satuan harus diisi dengan nilai numerik.");
                 return false;
             }
 
             // Validasi Grosir dan Harga Grosir
-            if (grosir == "Ya" && (isNaN(hargaGrosir) || hargaGrosir == "")) {
+            if (grosir && grosir.value == "Ya" && (isNaN(hargaGrosir) || hargaGrosir == "")) {
                 alert("Harga grosir harus diisi.");
                 return false;
-            } else if (grosir == "Tidak") {
-                document.forms["formProduk"]["hargaGrosir"].value = ""; 
+            } else if (grosir && grosir.value == "Tidak") {
+                document.getElementById("hargaGrosir").value = ""; 
             }
 
             // Validasi Jasa Kirim
@@ -118,86 +161,101 @@
         }
 
         function updateSubKategori() {
-            let kategori = document.getElementById("kategori").value;
-            let subKategoriSelect = document.getElementById("subKategori");
-            subKategoriSelect.innerHTML = ""; 
+            const kategori = document.getElementById("kategori").value;
+            const subKategori = document.getElementById('subKategori');
+            subKategori.innerHTML = '<option value="">--Pilih Sub Kategori--</option>'; // Reset the subcategory options
 
-            if (kategori == "Baju") {
-                addOption(subKategoriSelect, "Baju Pria", "Baju Pria");
-                addOption(subKategoriSelect, "Baju Wanita", "Baju Wanita");
-                addOption(subKategoriSelect, "Baju Anak", "Baju Anak");
-            } else if (kategori == "Elektronik") {
-                addOption(subKategoriSelect, "Mesin Cuci", "Mesin Cuci");
-                addOption(subKategoriSelect, "Kulkas", "Kulkas");
-                addOption(subKategoriSelect, "AC", "AC");
+            let options = [];
+            if (kategori == 'Baju') {
+                options = ['Baju Pria', 'Baju Wanita', 'Baju Anak'];
+            } else if (kategori == 'Elektronik') {
+                options = ['Mesin Cuci', 'Kulkas', 'AC'];
             } else if (kategori == "Alat Tulis") {
-                addOption(subKategoriSelect, "Kertas", "Kertas");
-                addOption(subKategoriSelect, "Map", "Map");
-                addOption(subKategoriSelect, "Pulpen", "Pulpen");
+                options = ['Kertas', 'Map', 'Pulpen'];
             }
-        }
-
-        function addOption(selectElement, text, value) {
-            let option = document.createElement("option"); //nambahin opsi buat update subkategori
-            option.text = text;
-            option.value = value;
-            selectElement.add(option);
-        }
-
-        window.onload = function() {
-            generateCaptcha();
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option;
+                opt.textContent = option;
+                subKategori.appendChild(opt);
+            });
         }
     </script>
 </head>
-<body>
-    <div class="form-container">
-        <h2>Form Tambah Data Produk</h2>
-        <p>Muthia Zhafira Sahnah - 24060122130071</p>
-        <p>PBP Lab D1</p>
-        <form name="formProduk" onsubmit="return validateForm()" method="post">
-            <label>Nama Produk:</label>
-            <input type="text" name="namaProduk">
-
-            <label>Deskripsi:</label>
-            <textarea name="deskripsi"></textarea>
-
-            <label>Kategori:</label>
-            <select id="kategori" name="kategori" onchange="updateSubKategori()">
-                <option value="">--Pilih Kategori--</option>
-                <option value="Baju">Baju</option>
-                <option value="Elektronik">Elektronik</option>
-                <option value="Alat Tulis">Alat Tulis</option>
-            </select>
-
-            <label>Sub Kategori:</label>
-            <select id="subKategori" name="subKategori">
-                <option value="">--Pilih Sub Kategori--</option>
-            </select>
-
-            <label>Harga Satuan:</label>
-            <input type="text" name="hargaSatuan">
-
-            <label>Grosir:</label>
-            <input type="radio" name="grosir" value="Ya"> Ya
-            <input type="radio" name="grosir" value="Tidak"> Tidak
-
-            <label>Harga Grosir:</label>
-            <input type="text" name="hargaGrosir">
-
-            <label>Jasa Kirim:</label>
-            <input type="checkbox" name="jasaKirim" value="JNE"> JNE
-            <input type="checkbox" name="jasaKirim" value="JNT"> JNT
-            <input type="checkbox" name="jasaKirim" value="AnterAja"> AnterAja
-            <input type="checkbox" name="jasaKirim" value="SiCepat"> SiCepat
-            <input type="checkbox" name="jasaKirim" value="Wahana"> Wahana
-
-            <label>Captcha:</label>
-            <input type="text" id="captchaText" readonly style="width: 60px; display: inline;">
-            <input type="text" name="captchaInput">
-
-            <input type="submit" value="Submit">
-            <input type="reset" value="Reset">
-        </form>
-    </div>
-</body>
+ <body>
+    <div class="container">
+        <div class="header">
+            <h2>Form Tambah Data Produk Toko Oren</h2>
+            <form class="form" id="form" onsubmit="return validateForm()">
+                <div class="form-control">
+                    <label>Nama Produk :</label>
+                    <input type="text" id="namaProduk">
+                </div>
+                <div class="form-control">
+                    <label>Deskripsi :</label>
+                    <textarea name="deskripsi"></textarea>
+                </div>
+                <div class="form-control">
+                    <label>Kategori :</label>
+                    <select id="kategori" name="kategori" onchange="updateSubKategori()">
+                        <option value="">--Pilih Kategori--</option>
+                        <option value="Baju">Baju</option>
+                        <option value="Elektronik">Elektronik</option>
+                        <option value="Alat Tulis">Alat Tulis</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label>Sub Kategori:</label>
+                    <select id="subKategori" name="subKategori">
+                        <option value="">--Pilih Sub Kategori--</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label>Harga Satuan :</label>
+                    <input type="text" id="hargaSatuan">
+                </div>
+                <div class="form-control">
+                    <label>Grosir ?</label>
+                    <br>
+                    <input type="radio" name="Grosir" id="Ya" value="Ya"> Ya
+                    <input type="radio" name="Grosir" id="Tidak" value="Tidak"> Tidak
+                </div>
+                <div class="form-control">
+                    <label>Harga Grosir :</label>
+                    <input type="text" id="hargaGrosir">
+                </div>
+                    <div class="form-control">
+                        <label>Jasa Kirim :</label>
+                        <br>
+                        <input type="checkbox" name="JasaKirim" id="JNE">JNE 
+                        <br>                    
+                        <input type="checkbox" name="JasaKirim" id="JNT">JNT                  
+                        <br> 
+                        <input type="checkbox" name="JasaKirim" id="SiCepat">SiCepat                   
+                        <br> 
+                        <input type="checkbox" name="JasaKirim" id="AnterAja">AnterAja  
+                        <br>                  
+                        <input type="checkbox" name="JasaKirim" id="Wahana">Wahana         
+                        <br> 
+                        <input type="checkbox" name="JasaKirim" id="IndahExpress">IndahExpress         
+                        <br>
+                    </div>
+                    <div class="form-control">
+                        <label>Captcha :</label>
+                        <br>
+                        <input type="text" id="captchaText" readonly>
+                        <br>
+                        <label>Masukkan Captcha :</label>
+                        <input type="text" name="captchaInput">
+                    </div>
+                    <div class="button">
+                        <br>
+                        <input id="submit-btn" type="submit" value="Submit" onsubmit="return validateForm()">
+                        <input id="reset-btn" type="reset" value="Reset">
+                    </div>
+                </form>
+            </form>
+            </div>
+        </div>
+    </body>
 </html>
